@@ -18,7 +18,7 @@ var connection = mysql.createConnection({
 });
 
 connection.connect(function () {
-    //if (err) throw err;
+    if (err) throw err;
     displayItems();
         });
         function displayItems() {
@@ -31,13 +31,13 @@ connection.connect(function () {
             // ask them the ID of the product they would like to buy.
         inquirer
         .prompt({
-        name: "customerChoice",
+        name: "userInput",
         type: "input",
         message: "Enter the ID for the item you want to buy: "
         })
         // once the customer has placed the order, check if your store has enough of the product to meet the customer's request.
         .then(function(answer){
-        var item = results[answer.customerChoice - 1];
+        var item = results[answer.userInput - 1];
         var itemName = item.product_name;
         var itemQuantity = item.stock_quantity;
         console.log("You have chosen " + itemName + ". We have " + itemQuantity + " in stock.");
@@ -47,7 +47,7 @@ connection.connect(function () {
             .prompt({
             name: "howMany",
             type: "input",
-            message: "Hot many would you like to buy?"
+            message: "Enter Order Quantity?"
         })
         // if your store _does_ have enough of the product, you should fulfill the customer's order.
         // show the customer the total cost of their purchase.
@@ -56,7 +56,7 @@ connection.connect(function () {
           var totalCost = parseInt(item.price) * parseInt(answer.howMany);
             console.log("Your order: " + answer.howMany + " " + itemName);
             console.log("Your total is: $" + totalCost);
-            console.log("We now have " + stock + " " + itemName + " remaining.");
+            console.log("There are now " + stock + " " + itemName + " left in stock.");
             // update the SQL database to reflect the remaining quantity.
             connection.query("UPDATE products SET ? WHERE ?",
             [{
